@@ -1,0 +1,61 @@
+/* Estilos para el formulario de contacto */
+.contact-form {
+    margin-bottom: 30px;
+  }
+  
+  .contact-form h2 {
+    margin-bottom: 20px;
+  }
+  
+  .contact-form .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .contact-form label {
+    font-weight: bold;
+  }
+  
+  .contact-form input[type="text"],
+  .contact-form input[type="email"],
+  .contact-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .contact-form textarea {
+    resize: vertical;
+  }
+  
+  .contact-form button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .contact-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Estilos para la lista de nombres del equipo */
+  .team-list {
+    margin-top: 30px;
+  }
+  
+  .team-list h2 {
+    margin-bottom: 20px;
+  }
+  
+  .team-list ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .team-list li {
+    margin-bottom: 10px;
+  }
+  

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+    <section class="contact-form">
+      <h2>Formulario de contacto</h2>
+      <form action="{{ url_for('submit_contact') }}" method="post">
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" name="nombre" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="mensaje">Mensaje:</label>
+          <textarea id="mensaje" name="mensaje" rows="4" required></textarea>
+        </div>
+        <!-- Agregar el widget de reCAPTCHA -->
+        <div class="g-recaptcha" data-sitekey="TU_CLAVE_DEL_SITIO_RECAPTCHA"></div>
+        <button type="submit">Enviar</button>
+      </form>
+    </section>
+
+    <section class="team-list">
+      <h2>Nuestro equipo</h2>
+      <ul>
+        {% if nombres %}
+          {% for nombre in nombres %}
+            <li>{{ nombre }}</li>
+          {% endfor %}
+        {% else %}
+          <p>No hay nombres disponibles para mostrar.</p>
+        {% endif %}
+      </ul>
+    </section>
+{% endblock %}
