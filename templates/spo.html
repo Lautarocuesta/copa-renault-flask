@@ -13,43 +13,23 @@
     <div class="container">
         <h1>Sponsors Aleatorios</h1>
         
-        <ul id="sponsors-list">
-            <!-- Aquí se generan los sponsors aleatorios -->
-        </ul>
+        <!-- Carrusel de sponsors -->
+        <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for sponsor in sponsors %}
+                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                    <img src="{{ url_for('static', filename='img/' + sponsor + '.jpg') }}" class="d-block w-100" alt="{{ sponsor }}">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>{{ sponsor }}</h5>
+                        <p>Descripción del sponsor {{ sponsor }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 
     <!-- Agrega los scripts de Bootstrap al final del archivo para un mejor rendimiento -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sponsors = ['Nike', 'Adidas', 'Coca-Cola', 'Pepsi', 'Apple', 'Samsung', 'Microsoft', 'Amazon', 'Google', 'Facebook'];
-            const sponsorsList = document.getElementById('sponsors-list');
-
-            // Function to generate a random number of random sponsors
-            function generateRandomSponsors() {
-                const numberOfSponsors = Math.floor(Math.random() * sponsors.length) + 1;
-                const selectedSponsors = [];
-
-                for (let i = 0; i < numberOfSponsors; i++) {
-                    const randomIndex = Math.floor(Math.random() * sponsors.length);
-                    const sponsor = sponsors[randomIndex];
-
-                    if (!selectedSponsors.includes(sponsor)) {
-                        selectedSponsors.push(sponsor);
-                    }
-                }
-
-                return selectedSponsors;
-            }
-
-            // Populate the list with random sponsors
-            const randomSponsors = generateRandomSponsors();
-            randomSponsors.forEach(sponsor => {
-                const listItem = document.createElement('li');
-                listItem.textContent = sponsor;
-                sponsorsList.appendChild(listItem);
-            });
-        });
-    </script>
 </body>
 </html>

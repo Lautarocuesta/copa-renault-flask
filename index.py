@@ -21,7 +21,7 @@ def submit_contact():
     nombre = request.form['nombre']
     return f'Formulario enviado por {nombre}'
 
-@app.route('/Sponsors')  # Ruta para mostrar los sponsors aleatorios
+@app.route('/sponsors')  # Ruta para mostrar los sponsors aleatorios
 def sponsors_random():
     # Mezclar los sponsors en orden aleatorio
     random.shuffle(sponsors)
