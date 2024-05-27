@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+
 import random
 
 app = Flask(__name__)
@@ -8,7 +9,7 @@ sponsors = ["Nike", "Adidas", "Coca-Cola", "Pepsi", "Visa", "Apple", "Samsung"]
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('home.html',sponsors=sponsors)
 
 @app.route('/contacto')
 def contacto():

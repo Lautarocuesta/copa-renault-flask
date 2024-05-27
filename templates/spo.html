@@ -18,7 +18,13 @@
             <div class="carousel-inner">
                 {% for sponsor in sponsors %}
                 <div class="carousel-item {% if loop.first %}active{% endif %}">
-                    <img src="{{ url_for('static', filename='img/' + sponsor + '.jpg') }}" class="d-block w-100" alt="{{ sponsor }}">
+                    {% if sponsor == 'cc' %}
+                        <img src="{{ url_for('static', filename='img/cc.png') }}" class="d-block w-100" alt="CC">
+                    {% elif sponsor == 'image' %}
+                        <img src="{{ url_for('static', filename='img/image.png') }}" class="d-block w-100" alt="Image">
+                    {% elif sponsor == 'visa' %}
+                        <img src="{{ url_for('static', filename='img/visa.png') }}" class="d-block w-100" alt="Visa">
+                    {% endif %}
                     <div class="carousel-caption d-none d-md-block">
                         <h5>{{ sponsor }}</h5>
                         <p>Descripción del sponsor {{ sponsor }}</p>
