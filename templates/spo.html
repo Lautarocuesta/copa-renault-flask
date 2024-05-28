@@ -10,10 +10,8 @@
             background: linear-gradient(to right, #f0f0f0, #ffeb3b); /* De gris claro a amarillo */
             color: #333;
             font-family: Arial, sans-serif;
-            height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
             align-items: center;
             text-align: center;
         }
@@ -33,10 +31,33 @@
             max-width: 150px; /* Ajusta el tamaño máximo de las imágenes */
             height: auto; /* Mantiene la proporción de aspecto */
         }
+        .carousel-item.active,
+        .carousel-item-next,
+        .carousel-item-prev {
+            display: flex;
+            justify-content: center;
+        }
+        .carousel-item {
+            flex: 0 0 33.333%; /* Ancho de cada item */
+            max-width: 33.333%; /* Ancho de cada item */
+        }
+        .carousel-inner {
+            display: flex;
+        }
+        .carousel-item-next:not(.carousel-item-start),
+        .active.carousel-item-end,
+        .carousel-item-prev:not(.carousel-item-end),
+        .active.carousel-item-start {
+            transform: translateX(33.333%);
+        }
+        .carousel-item-end.active,
+        .carousel-item-next {
+            transform: translateX(0);
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container mt-5">
         <h1>Sponsors De Nuestra Copa</h1>
         
         <!-- Texto sobre el carrusel -->
@@ -46,10 +67,10 @@
         </div>
         
         <!-- Carrusel de sponsors -->
-        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" data-bs-interval="10000">
+        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
             <div class="carousel-inner">
                 {% for sponsor in sponsors %}
-                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                <div class="carousel-item {% if loop.index0 < 3 %}active{% endif %}">
                     <div class="d-flex flex-column align-items-center">
                         {% if sponsor == "Nike" %}
                             <img src="{{ url_for('static', filename='img/nike.png') }}" class="d-block sponsor-img" alt="Nike">
