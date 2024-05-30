@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session  # Importa también 'request'
 
 import random
-app.secret_key = 'copa' 
+
 
 app = Flask(__name__)
 
@@ -35,14 +35,7 @@ def carta():
         session['cart'] = []
     return render_template('carta.html', menu_items=menu_items, cart=session['cart'])
 
-@app.route('/add_to_cart/<item_name>')
-def add_to_cart(item_name):
-    if 'cart' not in session:
-        session['cart'] = []
-    session['cart'].append(item_name)
-    session.modified = True
-    return redirect(url_for('carta'))
-    
+app.secret_key = 'copa' 
 menu_items = [
     {'name': 'Hamburguesa', 'price': 5.99},
     {'name': 'Pizza', 'price': 8.99},
@@ -50,6 +43,13 @@ menu_items = [
     {'name': 'Soda', 'price': 1.99},
     {'name': 'Agua', 'price': 0.99},
 ]
+@app.route('/add_to_cart/<item_name>')
+def add_to_cart(item_name):
+    if 'cart' not in session:
+        session['cart'] = []
+    session['cart'].append(item_name)
+    session.modified = True
+    return redirect(url_for('carta'))
 
 if __name__ == '__main__':
     app.run(debug=True)
