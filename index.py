@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request  # Importa también 'request'
+from flask import Flask, render_template, request, redirect, url_for, session  # Importa también 'request'
 
 import random
+app.secret_key = 'copa' 
 
 app = Flask(__name__)
 
@@ -27,6 +28,28 @@ def sponsors_random():
     # Mezclar los sponsors en orden aleatorio
     random.shuffle(sponsors)
     return render_template("spo.html", sponsors=sponsors)
+    
+@app.route('/carta')
+def carta():
+    if 'cart' not in session:
+        session['cart'] = []
+    return render_template('carta.html', menu_items=menu_items, cart=session['cart'])
+
+@app.route('/add_to_cart/<item_name>')
+def add_to_cart(item_name):
+    if 'cart' not in session:
+        session['cart'] = []
+    session['cart'].append(item_name)
+    session.modified = True
+    return redirect(url_for('carta'))
+    
+menu_items = [
+    {'name': 'Hamburguesa', 'price': 5.99},
+    {'name': 'Pizza', 'price': 8.99},
+    {'name': 'Ensalada', 'price': 4.99},
+    {'name': 'Soda', 'price': 1.99},
+    {'name': 'Agua', 'price': 0.99},
+]
 
 if __name__ == '__main__':
     app.run(debug=True)
