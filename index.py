@@ -4,7 +4,7 @@ import random
 
 app = Flask(__name__)
 
-# Configuración de la base de datoss
+# Configuración de la base de datosssss
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///carrito.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
