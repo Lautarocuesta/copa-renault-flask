@@ -1,17 +1,19 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import random
 
 app = Flask(__name__)
 
-# Configuración de la base de datos
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///carrito.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 # Definición del modelo de base de datos
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    order_number = db.Column(db.Integer, nullable=False, unique=True)
     items = db.Column(db.String, nullable=False)
     total_price = db.Column(db.Float, nullable=False)
 
@@ -70,6 +72,7 @@ def add_to_cart(item_name):
                 cart[item_name] = {'price': item['price'], 'quantity': 1}
                 break
     session.modified = True
+    flash(f'{item_name} ha sido añadido al carrito. ¿Estás seguro de tu pedido?', 'info')
     return redirect(url_for('carta'))
 
 @app.route('/update_cart/<item_name>/<action>')
@@ -90,8 +93,11 @@ def send_cart():
     total_price = sum(item['price'] * item['quantity'] for item in cart.values())
     items = ", ".join([f"{name} x{details['quantity']}" for name, details in cart.items()])
 
+    # Calcular el número de pedido como el número de pedidos existentes + 1
+    order_number = Order.query.count() + 1
+
     # Guardar el pedido en la base de datos
-    order = Order(items=items, total_price=total_price)
+    order = Order(order_number=order_number, items=items, total_price=total_price)
     db.session.add(order)
     db.session.commit()
 
@@ -99,7 +105,7 @@ def send_cart():
     session.pop('cart', None)
     session.modified = True
 
-    flash(f'Carrito enviado. Total: ${total_price:.2f}')
+    flash(f'Carrito enviado. Número de pedido: {order_number}. Total: ${total_price:.2f}', 'success')
     return redirect(url_for('carta'))
 
 @app.route('/orders')
