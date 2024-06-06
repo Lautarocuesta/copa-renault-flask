@@ -72,20 +72,34 @@
                 {% for sponsor in sponsors %}
                 <div class="carousel-item {% if loop.index0 < 3 %}active{% endif %}">
                     <div class="d-flex flex-column align-items-center">
-                        {% if sponsor == "Nike" %}
-                            <img src="{{ url_for('static', filename='img/nike.png') }}" class="d-block sponsor-img" alt="Nike">
-                        {% elif sponsor == "Adidas" %}
-                            <img src="{{ url_for('static', filename='img/adidas.png') }}" class="d-block sponsor-img" alt="Adidas">
-                        {% elif sponsor == "Coca-Cola" %}
-                            <img src="{{ url_for('static', filename='img/cc.png') }}" class="d-block sponsor-img" alt="Coca-Cola">
-                        {% elif sponsor == "Pepsi" %}
-                            <img src="{{ url_for('static', filename='img/image.png') }}" class="d-block sponsor-img" alt="Pepsi">
-                        {% elif sponsor == "Visa" %}
-                            <img src="{{ url_for('static', filename='img/visa.png') }}" class="d-block sponsor-img" alt="Visa">
-                        {% elif sponsor == "Apple" %}
-                            <img src="{{ url_for('static', filename='img/apple.png') }}" class="d-block sponsor-img" alt="Apple">
-                        {% elif sponsor == "Samsung" %}
-                            <img src="{{ url_for('static', filename='img/samsung.png') }}" class="d-block sponsor-img" alt="Samsung">
+                        {% if sponsor == "beltran" %}
+                            <img src="{{ url_for('static', filename='img/beltran.png') }}" class="d-block sponsor-img" alt="beltran">
+                        {% elif sponsor == "cc" %}
+                            <img src="{{ url_for('static', filename='img/cc.png') }}" class="d-block sponsor-img" alt="cc">
+                        {% elif sponsor == "city" %}
+                            <img src="{{ url_for('static', filename='img/city.png') }}" class="d-block sponsor-img" alt="city">
+                        {% elif sponsor == "congreso" %}
+                            <img src="{{ url_for('static', filename='img/congreso.png') }}" class="d-block sponsor-img" alt="congreso">
+                        {% elif sponsor == "fie" %}
+                            <img src="{{ url_for('static', filename='img/fie.png') }}" class="d-block sponsor-img" alt="fie">
+                        {% elif sponsor == "grido" %}
+                            <img src="{{ url_for('static', filename='img/grido.png') }}" class="d-block sponsor-img" alt="grido">
+                        {% elif sponsor == "image" %}
+                            <img src="{{ url_for('static', filename='img/image.png') }}" class="d-block sponsor-img" alt="image">
+                        {% elif sponsor == "khalama" %}
+                            <img src="{{ url_for('static', filename='img/khalama.png') }}" class="d-block sponsor-img" alt="khalama">
+                        {% elif sponsor == "patagonia" %}
+                            <img src="{{ url_for('static', filename='img/patagonia.png') }}" class="d-block sponsor-img" alt="patagonia">
+                        {% elif sponsor == "pretty" %}
+                            <img src="{{ url_for('static', filename='img/pretty.png') }}" class="d-block sponsor-img" alt="pretty">
+                        {% elif sponsor == "principito" %}
+                            <img src="{{ url_for('static', filename='img/principito.png') }}" class="d-block sponsor-img" alt="principito">
+                        {% elif sponsor == "prittyp" %}
+                            <img src="{{ url_for('static', filename='img/prittyp.png') }}" class="d-block sponsor-img" alt="prittyp">
+                        {% elif sponsor == "s20" %}
+                            <img src="{{ url_for('static', filename='img/s20.png') }}" class="d-block sponsor-img" alt="s20">
+                        {% elif sponsor == "visa" %}
+                            <img src="{{ url_for('static', filename='img/visa.png') }}" class="d-block sponsor-img" alt="visa">
                         {% endif %}
                         <div class="carousel-caption d-none d-md-block">
                             <h5>{{ sponsor }}</h5>
