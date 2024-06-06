@@ -25,7 +25,7 @@ with app.app_context():
 sponsors = [
     "beltran", "city", "congreso", "fie", "grido", 
     "image", "khalama", "patagonia", "pretty", "principito", 
-    "pritty", "s20",
+    "pritty", "s20", 
 ]
 
 @app.route('/')
