@@ -114,5 +114,10 @@ def orders():
 def generate_order_number():
     return str(uuid.uuid4().hex)[:10]
 
+@app.route('/ubicacion')
+def ubicacion():
+    return render_template('ubicacion.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
