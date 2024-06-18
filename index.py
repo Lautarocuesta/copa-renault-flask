@@ -5,6 +5,7 @@ import uuid
 
 app = Flask(__name__)
 
+#falta un apartado con los tickets para la incripcion y un apartado de fixture 
 # Configuración de la base de datos
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///carrito.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
