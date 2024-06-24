@@ -2,25 +2,73 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_sqlalchemy import SQLAlchemy
 import random
 import uuid
+import pymysql
 
 app = Flask(__name__)
+app.secret_key = 'copa'
 
-#falta un apartado con los tickets para la incripcion y un apartado de fixture 
-# Configuración de la base de datos
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///carrito.db'
+# Configuración de la base de datos MySQL
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://uezytq7dxx48hp8w:s18HO1qr2Nw46fXbuHPg@bhyb1fa898t0ow9ufdlc-mysql.services.clever-cloud.com:3306/db_name'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Inicialización de la base de datos SQLAlchemy
 db = SQLAlchemy(app)
 
-# Definición del modelo de base de datos
-class Order(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    items = db.Column(db.String, nullable=False)
-    total_price = db.Column(db.Float, nullable=False)
-    order_number = db.Column(db.String(50), unique=True, nullable=False)
+# Definición de modelos SQLAlchemy
+class User(db.Model):
+    __tablename__ = 'Users'
+    user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(15), nullable=False)
 
-# Inicializar la base de datos dentro del contexto de la aplicación
+class Product(db.Model):
+    __tablename__ = 'Products'
+    product_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text)
+    price = db.Column(db.Numeric(10, 2), nullable=False)
+
+class PaymentMethod(db.Model):
+    __tablename__ = 'PaymentMethods'
+    payment_method_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    method_name = db.Column(db.String(50), nullable=False)
+
+class OrderStatus(db.Model):
+    __tablename__ = 'OrderStatus'
+    status_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    status_name = db.Column(db.String(50), nullable=False)
+
+class Order(db.Model):
+    __tablename__ = 'Orders'
+    order_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('Users.user_id'), nullable=False)
+    payment_method_id = db.Column(db.Integer, db.ForeignKey('PaymentMethods.payment_method_id'), nullable=False)
+    total_amount = db.Column(db.Numeric(10, 2), nullable=False)
+    order_date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    status_id = db.Column(db.Integer, db.ForeignKey('OrderStatus.status_id'), nullable=False)
+
+class OrderDetail(db.Model):
+    __tablename__ = 'OrderDetails'
+    order_detail_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('Orders.order_id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('Products.product_id'), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Numeric(10, 2), nullable=False)
+
+class Notification(db.Model):
+    __tablename__ = 'Notifications'
+    notification_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('Orders.order_id'), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    sent_date = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+# Crear todas las tablas necesarias
 with app.app_context():
     db.create_all()
+
 
 # Lista de sponsors
 sponsors = [

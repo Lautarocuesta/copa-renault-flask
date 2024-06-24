@@ -3,11 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Inicio - Copa Renault</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    {%block body%}
-    <h1> estamos en contacto</h1>
-    {%endblock%}
+    <header>
+        <h1>Bienvenido a la Copa Renault</h1>
+        <nav>
+            <a href="{{ url_for('index') }}">Inicio</a>
+            <a href="{{ url_for('inscripcion') }}">Inscripción</a>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Sobre el evento</h2>
+            <p>La Copa Renault es una competencia emocionante que reúne a los mejores pilotos.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Copa Renault. Todos los derechos reservados.</p>
+    </footer>
 </body>
 </html>
