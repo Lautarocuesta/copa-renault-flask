@@ -1,28 +1,43 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import OperationalError
 import random
 import uuid
 import pymysql
+import logging
+
+# Configure logging for SQLAlchemy
+logging.basicConfig()
+logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+logging.getLogger('pymysql').setLevel(logging.DEBUG)
+
+# Install pymysql as MySQLdb
+pymysql.install_as_MySQLdb()
 
 app = Flask(__name__)
 app.secret_key = 'copa'
 
-# Configuración de la base de datos MySQL
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://uezytq7dxx48hp8w:s18HO1qr2Nw46fXbuHPg@bhyb1fa898t0ow9ufdlc-mysql.services.clever-cloud.com:3306/db_name'
-
+# Database Configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://uezytq7dxx48hp8w:s18HO1qr2Nw46fXbuHPg@bhyb1fa898t0ow9ufdlc-mysql.services.clever-cloud.com/bhyb1fa898t0ow9ufdlc'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'connect_args': {
+        'connect_timeout': 60  # Aumentar el tiempo de espera a 60 segundos
+    }
+}
 
-# Inicialización de la base de datos SQLAlchemy
+# Initialize SQLAlchemy
 db = SQLAlchemy(app)
 
-# Definición de modelos SQLAlchemy
+# Define SQLAlchemy Models
 class User(db.Model):
     __tablename__ = 'Users'
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(15), nullable=False)
+    def __repr__(self):
+        return f'<User {self.name}>'
 
 class Product(db.Model):
     __tablename__ = 'Products'
@@ -49,6 +64,10 @@ class Order(db.Model):
     total_amount = db.Column(db.Numeric(10, 2), nullable=False)
     order_date = db.Column(db.DateTime, default=db.func.current_timestamp())
     status_id = db.Column(db.Integer, db.ForeignKey('OrderStatus.status_id'), nullable=False)
+    order_number = db.Column(db.String(10), unique=True, nullable=False)  # Agregar este campo para el número de orden
+
+    def __repr__(self):
+        return f'<Order {self.order_id}>'
 
 class OrderDetail(db.Model):
     __tablename__ = 'OrderDetails'
@@ -65,12 +84,17 @@ class Notification(db.Model):
     message = db.Column(db.Text, nullable=False)
     sent_date = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-# Crear todas las tablas necesarias
+# Create all necessary tables
 with app.app_context():
-    db.create_all()
+    try:
+        db.create_all()
+        print("La base de datos se ha creado correctamente.")
+    except OperationalError as e:
+        print("Error al conectar con la base de datos:", e)
+    except Exception as e:
+        print("Error:", e)
 
-
-# Lista de sponsors
+# List of sponsors
 sponsors = [
     "beltran", "city", "congreso", "fie", "grido", 
     "image", "khalama", "patagonia", "pretty", "principito", 
@@ -99,8 +123,6 @@ def sponsors_random():
 @app.route('/carta')
 def carta():
     return render_template('carta.html', menu_items=menu_items, cart=session.get('cart', {}))
-
-app.secret_key = 'copa'
 
 menu_items = [
     {'name': 'Hamburguesa', 'price': 5.99},
@@ -141,19 +163,47 @@ def update_cart(item_name, action):
 def send_cart():
     cart = session.get('cart', {})
     total_price = sum(item['price'] * item['quantity'] for item in cart.values())
-    items = ", ".join([f"{name} x{details['quantity']}" for name, details in cart.items()])
 
     order_number = generate_order_number()
 
-    order = Order(items=items, total_price=total_price, order_number=order_number)
-    db.session.add(order)
-    db.session.commit()
+    user_id = 1  # Aquí debes establecer el usuario correcto
+    payment_method_id = 1  # Aquí debes establecer el método de pago correcto
+    status_id = 1  # Aquí debes establecer el estado correcto de la orden
 
-    session.pop('cart', None)
-    session.modified = True
+    with app.app_context():
+        try:
+            # Crear la instancia de Order
+            order = Order(user_id=user_id,
+                          payment_method_id=payment_method_id,
+                          total_amount=total_price,
+                          order_number=order_number,
+                          status_id=status_id)
+            db.session.add(order)
+            db.session.commit()
 
-    flash(f'Carrito enviado. Total: ${total_price:.2f} - Número de pedido: {order_number}')
-    return redirect(url_for('carta'))
+            # Ahora que la orden se ha guardado correctamente, 
+            # podemos proceder a guardar los detalles de la orden
+            for item_name, details in cart.items():
+                product = Product.query.filter_by(name=item_name).first()
+                order_detail = OrderDetail(order_id=order.order_id,
+                                           product_id=product.product_id,
+                                           quantity=details['quantity'],
+                                           price=details['price'])
+                db.session.add(order_detail)
+            
+            db.session.commit()
+
+            session.pop('cart', None)
+            session.modified = True
+
+            flash(f'Carrito enviado. Total: ${total_price:.2f} - Número de pedido: {order_number}')
+            return redirect(url_for('carta'))
+
+        except Exception as e:
+            db.session.rollback()
+            flash('Error al procesar la orden. Por favor, inténtelo de nuevo más tarde.')
+            return redirect(url_for('carta'))
+
 
 @app.route('/orders')
 def orders():
@@ -166,7 +216,6 @@ def generate_order_number():
 @app.route('/ubicacion')
 def ubicacion():
     return render_template('ubicacion.html')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
