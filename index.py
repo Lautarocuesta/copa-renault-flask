@@ -22,12 +22,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://uezytq7dxx48hp8w:s18HO1
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     'connect_args': {
-        'connect_timeout': 60  # Aumentar el tiempo de espera a 60 segundos
+        'connect_timeout': 60  # Increase the timeout to 60 seconds
     }
 }
 
 # Initialize SQLAlchemy
 db = SQLAlchemy(app)
+
 
 # Define SQLAlchemy Models
 class User(db.Model):
@@ -36,8 +37,10 @@ class User(db.Model):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(15), nullable=False)
+
     def __repr__(self):
         return f'<User {self.name}>'
+
 
 class Product(db.Model):
     __tablename__ = 'Products'
@@ -46,28 +49,33 @@ class Product(db.Model):
     description = db.Column(db.Text)
     price = db.Column(db.Numeric(10, 2), nullable=False)
 
+
 class PaymentMethod(db.Model):
     __tablename__ = 'PaymentMethods'
     payment_method_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     method_name = db.Column(db.String(50), nullable=False)
+
 
 class OrderStatus(db.Model):
     __tablename__ = 'OrderStatus'
     status_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     status_name = db.Column(db.String(50), nullable=False)
 
+
 class Order(db.Model):
     __tablename__ = 'Orders'
-    order_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('Users.user_id'), nullable=False)
-    payment_method_id = db.Column(db.Integer, db.ForeignKey('PaymentMethods.payment_method_id'), nullable=False)
-    total_amount = db.Column(db.Numeric(10, 2), nullable=False)
-    order_date = db.Column(db.DateTime, default=db.func.current_timestamp())
-    status_id = db.Column(db.Integer, db.ForeignKey('OrderStatus.status_id'), nullable=False)
-    order_number = db.Column(db.String(10), unique=True, nullable=False)  # Agregar este campo para el número de orden
+
+    order_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('Users.user_id'))
+    payment_method_id = db.Column(db.Integer, db.ForeignKey('PaymentMethods.payment_method_id'))
+    total_amount = db.Column(db.Float)
+    order_date = db.Column(db.DateTime)
+    status_id = db.Column(db.Integer, db.ForeignKey('OrderStatus.status_id'))
+    order_number = db.Column(db.String(50), unique=True)
 
     def __repr__(self):
         return f'<Order {self.order_id}>'
+
 
 class OrderDetail(db.Model):
     __tablename__ = 'OrderDetails'
@@ -77,6 +85,7 @@ class OrderDetail(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Numeric(10, 2), nullable=False)
 
+
 class Notification(db.Model):
     __tablename__ = 'Notifications'
     notification_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -84,45 +93,69 @@ class Notification(db.Model):
     message = db.Column(db.Text, nullable=False)
     sent_date = db.Column(db.DateTime, default=db.func.current_timestamp())
 
+
+# Function to add the 'order_number' column if it does not exist
+def add_order_number_column():
+    try:
+        with app.app_context():
+            # Intenta añadir la columna si no existe
+            if not hasattr(Order, 'order_number'):
+                db.session.execute('ALTER TABLE Orders ADD COLUMN order_number VARCHAR(50)')
+                db.session.commit()
+    except OperationalError as e:
+        print(f"Error adding column: {e}")
+
+add_order_number_column()
+
+
+
 # Create all necessary tables
 with app.app_context():
     try:
         db.create_all()
+        add_order_number_column()
         print("La base de datos se ha creado correctamente.")
     except OperationalError as e:
         print("Error al conectar con la base de datos:", e)
     except Exception as e:
         print("Error:", e)
 
+
 # List of sponsors
 sponsors = [
-    "beltran", "city", "congreso", "fie", "grido", 
-    "image", "khalama", "patagonia", "pretty", "principito", 
-    "pritty", "s20", 
+    "beltran", "city", "congreso", "fie", "grido",
+    "image", "khalama", "patagonia", "pretty", "principito",
+    "pritty", "s20",
 ]
+
 
 @app.route('/')
 def home():
     return render_template('home.html', sponsors=sponsors)
+
 
 @app.route('/contacto')
 def contacto():
     nombres = ["Cuesta", "Carnalito", "Pajan"]
     return render_template("contacto.html", nombres=nombres)
 
+
 @app.route('/submit_contact', methods=['POST'])
 def submit_contact():
     nombre = request.form['nombre']
     return f'Formulario enviado por {nombre}'
+
 
 @app.route('/sponsors')
 def sponsors_random():
     random.shuffle(sponsors)
     return render_template("spo.html", sponsors=sponsors)
 
+
 @app.route('/carta')
 def carta():
     return render_template('carta.html', menu_items=menu_items, cart=session.get('cart', {}))
+
 
 menu_items = [
     {'name': 'Hamburguesa', 'price': 5.99},
@@ -131,6 +164,7 @@ menu_items = [
     {'name': 'Soda', 'price': 1.99},
     {'name': 'Agua', 'price': 0.99},
 ]
+
 
 @app.route('/add_to_cart/<item_name>')
 def add_to_cart(item_name):
@@ -147,6 +181,7 @@ def add_to_cart(item_name):
     session.modified = True
     return redirect(url_for('carta'))
 
+
 @app.route('/update_cart/<item_name>/<action>')
 def update_cart(item_name, action):
     if 'cart' in session and item_name in session['cart']:
@@ -158,6 +193,7 @@ def update_cart(item_name, action):
             session['cart'].pop(item_name)
         session.modified = True
     return redirect(url_for('carta'))
+
 
 @app.route('/send_cart', methods=['POST'])
 def send_cart():
@@ -181,16 +217,19 @@ def send_cart():
             db.session.add(order)
             db.session.commit()
 
-            # Ahora que la orden se ha guardado correctamente, 
+            # Ahora que la orden se ha guardado correctamente,
             # podemos proceder a guardar los detalles de la orden
             for item_name, details in cart.items():
                 product = Product.query.filter_by(name=item_name).first()
+                if product is None:
+                    flash(f'Error: Producto {item_name} no encontrado.')
+                    return redirect(url_for('carta'))
                 order_detail = OrderDetail(order_id=order.order_id,
                                            product_id=product.product_id,
                                            quantity=details['quantity'],
                                            price=details['price'])
                 db.session.add(order_detail)
-            
+
             db.session.commit()
 
             session.pop('cart', None)
@@ -201,6 +240,7 @@ def send_cart():
 
         except Exception as e:
             db.session.rollback()
+            logging.error(f'Error al procesar la orden: {e}')
             flash('Error al procesar la orden. Por favor, inténtelo de nuevo más tarde.')
             return redirect(url_for('carta'))
 
@@ -210,12 +250,15 @@ def orders():
     orders = Order.query.all()
     return render_template('orders.html', orders=orders)
 
+
 def generate_order_number():
     return str(uuid.uuid4().hex)[:10]
+
 
 @app.route('/ubicacion')
 def ubicacion():
     return render_template('ubicacion.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
