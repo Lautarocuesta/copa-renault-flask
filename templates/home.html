@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 
-{% block body %}
+{% block title %}Home{% endblock %}
 
-    <header>
+{% block body %}
+    <header class="text-center">
+        <img src="{{ url_for('static', filename='img/logocc.png') }}" alt="Center Logo" class="logo-center">
         <h1>🏆 Bienvenido a Copa Renault</h1>
     </header>
     
@@ -34,13 +36,11 @@
                 <li><strong>⚽ Fútbol:</strong> Fomentamos el trabajo en equipo y la disciplina a través del fútbol.</li>
                 <li><strong>🏀 Baloncesto:</strong> Desarrollamos habilidades de coordinación y estrategia en el baloncesto.</li>
                 <li><strong>🏐 Voleibol:</strong> Valoramos la cooperación y el espíritu deportivo en el voleibol.</li>
-
             </ul>
         </section>
     </main>
 
-    <footer>
+    <footer class="text-center">
         <p>&copy; 2024 Copa Renault - Todos los derechos reservados</p>
     </footer>
-
 {% endblock %}
