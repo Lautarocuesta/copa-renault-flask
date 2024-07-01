@@ -2,41 +2,135 @@
 
 {% block body %}
 
-    <header class="text-center mb-4">
-        <img src="{{ url_for('static', filename='img/logocc.png') }}" alt="Center Logo" width="100" height="100">
-        <h1 class="text-warning">🏆 Bienvenido a Copa Renault</h1>
-    </header>
-    
-    <main>
-        <section>
-            <h2 class="text-warning">👋 ¡Bienvenido!</h2>
-            <p>En Copa Renault nos esforzamos por ofrecer una educación de calidad y un ambiente de aprendizaje inclusivo y enriquecedor.</p>
-        </section>
+<header class="text-center mb-4">
+    <img src="{{ url_for('static', filename='img/logocc.png') }}" alt="Logo Copa Renault" class="img-fluid mb-3" style="max-width: 200px;">
+    <h1 class="text-warning">🏆 Copa Renault</h1>
+    <h2 class="text-warning">Bienvenidos a Nuestra Copa</h2>
+    <div class="d-flex justify-content-center align-items-center mt-3">
+        <img src="{{ url_for('static', filename='img/renaultfff.png') }}" alt="Logo Renault" class="img-fluid me-3" style="max-width: 100px;">
+        <div id="demo" class="d-inline-block"></div>
+    </div>
+</header>
 
-        <section>
-            <h2 class="text-warning">🎯 Nuestra Misión</h2>
-            <p>Nuestra misión es proporcionar a nuestros estudiantes las herramientas necesarias para alcanzar su máximo potencial académico, personal y profesional.</p>
-        </section>
+<main class="container">
+    <section class="mt-5">
+        <h3 class="text-primary">Copas Anteriores</h3>
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <img src="{{ url_for('static', filename='img/outro.png') }}" alt="Copa Anterior" class="img-fluid">
+            </div>
+            <!-- Añadir más imágenes de copas anteriores aquí -->
+        </div>
+    </section>
 
-        <section>
-            <h2 class="text-warning">💡 Nuestros Valores</h2>
-            <ul>
-                <li><strong>🏅 Excelencia:</strong> Buscamos la excelencia en todo lo que hacemos.</li>
-                <li><strong>🤝 Respeto:</strong> Fomentamos un ambiente de respeto mutuo y comprensión.</li>
-                <li><strong>🛡️ Integridad:</strong> Actuamos con integridad y honestidad en todas nuestras interacciones.</li>
-                <li><strong>🤝 Colaboración:</strong> Valoramos la colaboración y el trabajo en equipo.</li>
-                <li><strong>🚀 Innovación:</strong> Promovemos la innovación y la creatividad en el proceso educativo.</li>
-            </ul>
-        </section>
+    <div class="row text-center mt-5">
+        <div class="col-md-4 mb-4">
+            <div class="card border-warning">
+                <div class="card-body">
+                    <h2 class="text-warning">🏐 Voleibol</h2>
+                    <img src="{{ url_for('static', filename='img/voley.png') }}" alt="Voleibol" class="img-fluid mb-3">
+                    <button class="btn btn-warning" data-bs-toggle="collapse" data-bs-target="#volleyball-fixture">Ver Fixture</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card border-secondary">
+                <div class="card-body">
+                    <h2 class="text-secondary">⚽ Fútbol</h2>
+                    <img src="{{ url_for('static', filename='img/fulbo.png') }}" alt="Fútbol" class="img-fluid mb-3">
+                    <button class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#soccer-fixture">Ver Fixture</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card border-success">
+                <div class="card-body">
+                    <h2 class="text-success">🏀 Baloncesto</h2>
+                    <img src="{{ url_for('static', filename='img/basquet.png') }}" alt="Baloncesto" class="img-fluid mb-3">
+                    <button class="btn btn-success" data-bs-toggle="collapse" data-bs-target="#basketball-fixture">Ver Fixture</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <section>
-            <h2 class="text-warning">🏅 Deportes</h2>
-            <ul>
-                <li><strong>⚽ Fútbol:</strong> Fomentamos el trabajo en equipo y la disciplina a través del fútbol.</li>
-                <li><strong>🏀 Baloncesto:</strong> Desarrollamos habilidades de coordinación y estrategia en el baloncesto.</li>
-                <li><strong>🏐 Voleibol:</strong> Valoramos la cooperación y el espíritu deportivo en el voleibol.</li>
-            </ul>
-        </section>
-    </main>
+    <section id="volleyball-fixture" class="collapse mt-3">
+        <h3 class="text-warning">🏐 Fixture de Voleibol</h3>
+        <table class="table table-striped table-hover">
+            <thead class="table-warning">
+                <tr>
+                    <th>Partido</th>
+                    <th>Cancha</th>
+                    <th>Horario</th>
+                    <th>Contrincante</th>
+                    <th>Colegio</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Add match details here -->
+            </tbody>
+        </table>
+    </section>
+
+    <section id="soccer-fixture" class="collapse mt-3">
+        <h3 class="text-secondary">⚽ Fixture de Fútbol</h3>
+        <table class="table table-striped table-hover">
+            <thead class="table-secondary">
+                <tr>
+                    <th>Partido</th>
+                    <th>Cancha</th>
+                    <th>Horario</th>
+                    <th>Contrincante</th>
+                    <th>Colegio</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Add match details here -->
+            </tbody>
+        </table>
+    </section>
+
+    <section id="basketball-fixture" class="collapse mt-3">
+        <h3 class="text-success">🏀 Fixture de Baloncesto</h3>
+        <table class="table table-striped table-hover">
+            <thead class="table-success">
+                <tr>
+                    <th>Partido</th>
+                    <th>Cancha</th>
+                    <th>Horario</th>
+                    <th>Contrincante</th>
+                    <th>Colegio</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Add match details here -->
+            </tbody>
+        </table>
+    </section>
+</main>
+
+<script>
+    // Set the date we're counting down to
+    var countDownDate = new Date("May 10, 2025 00:00:00").getTime();
+
+    // Update the count down every 1 second
+    var x = setInterval(function() {
+        // Get today's date and time
+        var now = new Date().getTime();
+        // Find the distance between now and the count down date
+        var distance = countDownDate - now;
+        // Time calculations for days, hours, minutes and seconds
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        // Display the result in the element with id="demo"
+        document.getElementById("demo").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+        // If the count down is over, write some text 
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("demo").innerHTML = "EXPIRED";
+        }
+    }, 1000);
+</script>
 
 {% endblock %}

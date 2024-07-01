@@ -11,15 +11,18 @@
             color: #333;
             font-family: 'Helvetica Neue', Arial, sans-serif;
         }
-        .sponsor-img {
-            width: 150px; 
-            height: 100px; 
-            object-fit: contain; 
+        .card {
+            width: 200px; 
             margin: 10px;
+        }
+        .card-img-top {
+            width: 100%; 
+            height: 150px; 
+            object-fit: contain; 
             filter: grayscale(100%);
             transition: filter 0.3s;
         }
-        .sponsor-img:hover {
+        .card-img-top:hover {
             filter: grayscale(0%);
         }
         .sponsor-link {
@@ -37,7 +40,7 @@
         .header img {
             max-height: 60px;
         }
-        h1, h3 {
+        h1 {
             margin-bottom: 20px;
         }
         .container {
@@ -47,85 +50,98 @@
 </head>
 <body>
     <header class="header text-center">
-        <img src="{{ url_for('static', filename='img/renaultfff.png') }}" alt="Renault Logo">
+        <img src="static/img/renaultfff.png" alt="Renault Logo">
         <h1>Sponsors De Nuestra Copa</h1>
     </header>
 
     <div class="container mt-5">
-        <!-- Fila de Sponsors -->
-        <div class="row text-center">
-            <div class="col">
+        <div class="d-flex flex-wrap justify-content-center">
+            <!-- Todos los Sponsors en un solo contenedor -->
+            <div class="card text-center">
                 <a href="https://argentina.gridohelado.com/" target="_blank" class="sponsor-link">
-                    <img src="{{ url_for('static', filename='img/grido.png') }}" class="sponsor-img" alt="Grido">
-                    <p>Grido</p>
+                    <img src="static/img/grido.png" class="card-img-top" alt="Grido">
+                    <div class="card-body">
+                        <p class="card-text">Grido</p>
+                    </div>
                 </a>
             </div>
-            <div class="col">
+            <div class="card text-center">
                 <a href="https://fieargentina.com.ar/" target="_blank" class="sponsor-link">
-                    <img src="{{ url_for('static', filename='img/fie.png') }}" class="sponsor-img" alt="Fie">
-                    <p>Fie</p>
+                    <img src="static/img/fie.png" class="card-img-top" alt="Fie">
+                    <div class="card-body">
+                        <p class="card-text">Fie</p>
+                    </div>
                 </a>
             </div>
-            <div class="col">
+            <div class="card text-center">
                 <a href="https://21.edu.ar/" target="_blank" class="sponsor-link">
-                    <img src="{{ url_for('static', filename='img/s20.png') }}" class="sponsor-img" alt="S20">
-                    <p>S20</p>
+                    <img src="static/img/s20.png" class="card-img-top" alt="S20">
+                    <div class="card-body">
+                        <p class="card-text">S20</p>
+                    </div>
                 </a>
             </div>
-            <div class="col">
+            <div class="card text-center">
                 <a href="https://prettiviajes.tur.ar/" target="_blank" class="sponsor-link">
-                    <img src="{{ url_for('static', filename='img/pretty.png') }}" class="sponsor-img" alt="Pretty">
-                    <p>Pretty</p>
+                    <img src="static/img/pretty.png" class="card-img-top" alt="Pretty">
+                    <div class="card-body">
+                        <p class="card-text">Pretty</p>
+                    </div>
                 </a>
             </div>
-            <div class="col">
+            <div class="card text-center">
                 <a href="https://www.bancopatagonia.com.ar/personas/index.php" target="_blank" class="sponsor-link">
-                    <img src="{{ url_for('static', filename='img/patagonia.png') }}" class="sponsor-img" alt="Patagonia">
-                    <p>Patagonia</p>
+                    <img src="static/img/patagonia.png" class="card-img-top" alt="Patagonia">
+                    <div class="card-body">
+                        <p class="card-text">Patagonia</p>
+                    </div>
                 </a>
             </div>
-            <div class="col">
+            <div class="card text-center">
                 <a href="https://cityespacio.com.ar/" target="_blank" class="sponsor-link">
-                    <img src="{{ url_for('static', filename='img/city.png') }}" class="sponsor-img" alt="City">
-                    <p>City</p>
+                    <img src="static/img/city.png" class="card-img-top" alt="City">
+                    <div class="card-body">
+                        <p class="card-text">City</p>
+                    </div>
                 </a>
             </div>
-        </div>
-
-        <!-- Demás Sponsors -->
-        <div class="mt-5">
-            <h3>Demás Sponsors</h3>
-            <div class="row text-center">
-                <div class="col">
-                    <a href="https://aceiteraprincipito.com/" target="_blank" class="sponsor-link">
-                        <img src="{{ url_for('static', filename='img/principito.png') }}" class="sponsor-img" alt="Principito">
-                        <p>Principito</p>
-                    </a>
-                </div>
-                <div class="col">
-                    <a href="https://www.instagram.com/panaderiacongreso/" target="_blank" class="sponsor-link">
-                        <img src="{{ url_for('static', filename='img/congreso.png') }}" class="sponsor-img" alt="Congreso">
-                        <p>Congreso</p>
-                    </a>
-                </div>
-                <div class="col">
-                    <a href="https://hamburguesasbeltran.com.ar/" target="_blank" class="sponsor-link">
-                        <img src="{{ url_for('static', filename='img/beltran.png') }}" class="sponsor-img" alt="Beltran">
-                        <p>Beltran</p>
-                    </a>
-                </div>
-                <div class="col">
-                    <a href="https://www.instagram.com/khalamadisco/" target="_blank" class="sponsor-link">
-                        <img src="{{ url_for('static', filename='img/khalama.png') }}" class="sponsor-img" alt="Khalama">
-                        <p>Khalama</p>
-                    </a>
-                </div>
+            <div class="card text-center">
+                <a href="https://aceiteraprincipito.com/" target="_blank" class="sponsor-link">
+                    <img src="static/img/principito.png" class="card-img-top" alt="Principito">
+                    <div class="card-body">
+                        <p class="card-text">Principito</p>
+                    </div>
+                </a>
+            </div>
+            <div class="card text-center">
+                <a href="https://www.instagram.com/panaderiacongreso/" target="_blank" class="sponsor-link">
+                    <img src="static/img/congreso.png" class="card-img-top" alt="Congreso">
+                    <div class="card-body">
+                        <p class="card-text">Congreso</p>
+                    </div>
+                </a>
+            </div>
+            <div class="card text-center">
+                <a href="https://hamburguesasbeltran.com.ar/" target="_blank" class="sponsor-link">
+                    <img src="static/img/beltran.png" class="card-img-top" alt="Beltran">
+                    <div class="card-body">
+                        <p class="card-text">Beltran</p>
+                    </div>
+                </a>
+            </div>
+            <div class="card text-center">
+                <a href="https://www.instagram.com/khalamadisco/" target="_blank" class="sponsor-link">
+                    <img src="static/img/khalama.png" class="card-img-top" alt="Khalama">
+                    <div class="card-body">
+                        <p class="card-text">Khalama</p>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
 
     <footer class="footer text-center mt-5">
-       
+        <p></p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYfAh2p8C9r2CfbB8b4FMS2WGGKQ5b8yV3kkjhz16y3GAP9bCAU9KxP3mTms" crossorigin="anonymous"></script>
