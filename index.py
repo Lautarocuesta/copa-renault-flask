@@ -158,11 +158,11 @@ def carta():
 
 
 menu_items = [
-    {'name': 'Hamburguesa', 'price': 5.99},
-    {'name': 'Pizza', 'price': 8.99},
-    {'name': 'Ensalada', 'price': 4.99},
-    {'name': 'Soda', 'price': 1.99},
-    {'name': 'Agua', 'price': 0.99},
+    {"name": "Agua", "price": 1.00, "image": "agua.png"},
+    {"name": "Coca", "price": 1.50, "image": "coca.png"},
+    {"name": "Ensalada", "price": 3.00, "image": "ensalada.png"},
+    {"name": "Hamburguesa", "price": 5.00, "image": "hambur.png"},
+    {"name": "Pizza", "price": 8.00, "image": "pizza.png"},
 ]
 
 
