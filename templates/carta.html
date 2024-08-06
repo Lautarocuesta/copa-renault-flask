@@ -28,8 +28,8 @@
             margin: 0 5px;
         }
         .card img {
-            width: 100px; /* Aumentar tamaño de imagen */
-            height: 100px; /* Aumentar tamaño de imagen */
+            width: 100px;
+            height: 100px;
             object-fit: cover;
             border-radius: 10px;
         }
@@ -38,14 +38,18 @@
 <body>
     <div class="container">
         <h1>Nuestro Menú</h1>
+        <form action="{{ url_for('change_currency') }}" method="post">
+            <button type="submit" name="currency" value="ARS" class="btn btn-primary">Mostrar en ARS</button>
+            <button type="submit" name="currency" value="USD" class="btn btn-primary">Mostrar en USD</button>
+        </form>
         <div class="row">
             {% for item in menu_items %}
             <div class="col-md-4 menu-item">
                 <div class="card">
-                    <img src="{{ url_for('static', filename='img/' + item.image) }}" alt="{{ item.name }}" style="width: 100px; height: 100px;"> <!-- Ajustar tamaño de imagen -->
+                    <img src="{{ url_for('static', filename='img/' + item.image) }}" alt="{{ item.name }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ item.name }}</h5>
-                        <p class="card-text">Precio: ${{ item.price * 1410 }} ARS</p> <!-- Convertidor de dólar a pesos argentinos -->
+                        <p class="card-text">Precio: ${{ item.price_converted }} {{ currency }}</p>
                         <a href="{{ url_for('add_to_cart', item_name=item.name) }}" class="btn btn-primary">Agregar al carrito</a>
                     </div>
                 </div>
@@ -57,7 +61,7 @@
             <ul class="list-group">
                 {% for item_name, item_details in cart.items() %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ item_name }} - ${{ item_details.price * 1410 }} ARS x {{ item_details.quantity }} <!-- Mostrar precio en pesos argentinos -->
+                    {{ item_name }} - ${{ item_details.price_converted }} {{ currency }} x {{ item_details.quantity }}
                     <div class="quantity-buttons">
                         <a href="{{ url_for('update_cart', item_name=item_name, action='decrement') }}" class="btn btn-sm btn-danger">-</a>
                         <span>{{ item_details.quantity }}</span>

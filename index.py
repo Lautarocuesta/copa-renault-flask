@@ -154,7 +154,26 @@ def sponsors_random():
 
 @app.route('/carta')
 def carta():
-    return render_template('carta.html', menu_items=menu_items, cart=session.get('cart', {}))
+    currency = session.get('currency', 'ARS')
+    exchange_rate = 1375 if currency == 'ARS' else 1  # Example exchange rate: 1 ARS = 0.005 USD
+    menu_items_converted = []
+
+    for item in menu_items:
+        price_converted = item['price'] * exchange_rate
+        menu_items_converted.append({
+            "name": item['name'],
+            "price": item['price'],
+            "price_converted": price_converted,
+            "image": item['image']
+        })
+
+    cart_converted = {name: {'price': details['price'] * exchange_rate, 'quantity': details['quantity']}
+                      for name, details in session.get('cart', {}).items()}
+
+    
+
+    return render_template('carta.html', menu_items=menu_items_converted, cart=cart_converted, currency=currency)
+
 
 
 menu_items = [
@@ -164,6 +183,11 @@ menu_items = [
     {"name": "Hamburguesa", "price": 5.00, "image": "hambur.png"},
     {"name": "Pizza", "price": 8.00, "image": "pizza.png"},
 ]
+@app.route('/change_currency', methods=['POST'])
+def change_currency():
+    currency = request.form['currency']
+    session['currency'] = currency
+    return redirect(url_for('carta'))
 
 
 @app.route('/add_to_cart/<item_name>')
