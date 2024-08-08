@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import OperationalError
+from datetime import datetime, timedelta
 import random
 import uuid
 import pymysql
@@ -69,7 +70,7 @@ class Order(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('Users.user_id'))
     payment_method_id = db.Column(db.Integer, db.ForeignKey('PaymentMethods.payment_method_id'))
     total_amount = db.Column(db.Float)
-    order_date = db.Column(db.DateTime)
+    order_date = db.Column(db.DateTime, default=datetime.now)
     status_id = db.Column(db.Integer, db.ForeignKey('OrderStatus.status_id'))
     order_number = db.Column(db.String(50), unique=True)
 
@@ -155,7 +156,7 @@ def sponsors_random():
 @app.route('/carta')
 def carta():
     currency = session.get('currency', 'ARS')
-    exchange_rate = 1375 if currency == 'ARS' else 1  # Example exchange rate: 1 ARS = 0.005 USD
+    exchange_rate = 1385 if currency == 'ARS' else 1  # Example exchange rate: 1 ARS = 0.005 USD
     menu_items_converted = []
 
     for item in menu_items:
@@ -230,6 +231,10 @@ def send_cart():
     payment_method_id = 1  # Aquí debes establecer el método de pago correcto
     status_id = 1  # Aquí debes establecer el estado correcto de la orden
 
+    # Establecer el tiempo actual y calcular la hora de entrega estimada
+    order_date = datetime.now()
+    estimated_delivery_time = order_date + timedelta(minutes=30)
+
     with app.app_context():
         try:
             # Crear la instancia de Order
@@ -237,12 +242,12 @@ def send_cart():
                           payment_method_id=payment_method_id,
                           total_amount=total_price,
                           order_number=order_number,
-                          status_id=status_id)
+                          status_id=status_id,
+                          order_date=order_date)
             db.session.add(order)
             db.session.commit()
 
-            # Ahora que la orden se ha guardado correctamente,
-            # podemos proceder a guardar los detalles de la orden
+            # Guardar los detalles de la orden
             for item_name, details in cart.items():
                 product = Product.query.filter_by(name=item_name).first()
                 if product is None:
@@ -259,7 +264,7 @@ def send_cart():
             session.pop('cart', None)
             session.modified = True
 
-            flash(f'Carrito enviado. Total: ${total_price:.2f} - Número de pedido: {order_number}')
+            flash(f'Carrito enviado. Total: ${total_price:.2f} - Número de pedido: {order_number}. Tiempo estimado de entrega: {estimated_delivery_time.strftime("%H:%M:%S")}')
             return redirect(url_for('carta'))
 
         except Exception as e:
@@ -267,7 +272,6 @@ def send_cart():
             logging.error(f'Error al procesar la orden: {e}')
             flash('Error al procesar la orden. Por favor, inténtelo de nuevo más tarde.')
             return redirect(url_for('carta'))
-
 
 @app.route('/orders')
 def orders():

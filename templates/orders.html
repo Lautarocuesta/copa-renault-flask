@@ -9,15 +9,21 @@
 <body>
     <div class="container">
         <h1>Pedidos</h1>
-        <ul class="list-group">
-            {% for order in orders %}
-            <li class="list-group-item">
-                <strong>Pedido ID:</strong> {{ order.id }}<br>
-                <strong>Items:</strong> {{ order.items }}<br>
-                <strong>Total:</strong> ${{ order.total_price }}
-            </li>
-            {% endfor %}
-        </ul>
+        {% if orders %}
+            <ul class="list-group">
+                {% for order in orders %}
+                <li class="list-group-item">
+                    <strong>Pedido ID:</strong> {{ order.order_id }}<br>
+                    <strong>Número de Pedido:</strong> {{ order.order_number }}<br>
+                    <strong>Fecha del Pedido:</strong> {{ order.order_date.strftime("%d/%m/%Y %H:%M:%S") }}<br>
+                    <strong>Total:</strong> ${{ order.total_amount }}<br>
+                    <strong>Estado:</strong> {{ order.status.status_name }}<br>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No hay pedidos para mostrar.</p>
+        {% endif %}
         <a href="{{ url_for('carta') }}" class="btn btn-primary mt-3">Volver al Menú</a>
     </div>
 
