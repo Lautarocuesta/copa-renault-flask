@@ -180,7 +180,7 @@ menu_items = [
     {"name": "Agua", "price": 1.00, "image": "agua.png"},
     {"name": "Coca", "price": 1.50, "image": "coca.png"},
     {"name": "Ensalada", "price": 3.00, "image": "ensalada.png"},
-    {"name": "Hamburguesa", "price": 5.00, "image": "hambur.png"},
+    {"name": "Hamburguesa", "price": 8.00, "image": "hambur.png"},
     {"name": "Pizza", "price": 8.00, "image": "pizza.png"},
 ]
 @app.route('/change_currency', methods=['POST'])
