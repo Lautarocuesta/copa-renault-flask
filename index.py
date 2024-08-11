@@ -1,7 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import OperationalError
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, IntegerField, TextAreaField, EmailField, SelectField
+from wtforms.validators import DataRequired, Email, Length
 from datetime import datetime, timedelta
+from contacto import contacto_bp
+from contacto import ContactForm
 import random
 import uuid
 import pymysql
@@ -86,6 +91,17 @@ class OrderDetail(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Numeric(10, 2), nullable=False)
 
+class ContactForm(FlaskForm):
+    name = StringField('Nombre', validators=[DataRequired()])
+    school = StringField('Colegio', validators=[DataRequired()])
+    email = EmailField('Correo Electrónico', validators=[DataRequired(), Email()])
+    roles = SelectField('Rol', choices=[('Profesor', 'Profesor'), ('Jugador', 'Jugador'), ('Técnico', 'Técnico'), ('Otro', 'Otro')], validators=[DataRequired()])
+    other_role = StringField('Especifique su rol (si eligió "Otro")')
+    age = IntegerField('Edad', validators=[DataRequired()])
+    message = TextAreaField('Mensaje', validators=[DataRequired()])
+    submit = SubmitField('Enviar')
+
+
 
 class Notification(db.Model):
     __tablename__ = 'Notifications'
@@ -135,11 +151,14 @@ def home():
     return render_template('home.html', sponsors=sponsors)
 
 
-@app.route('/contacto')
+@app.route('/contacto', methods=['GET', 'POST'])
 def contacto():
-    nombres = ["Cuesta", "Carnalito", "Pajan"]
-    return render_template("contacto.html", nombres=nombres)
-
+    form = ContactForm()
+    if form.validate_on_submit():
+        # Procesar el formulario
+        flash(f"Formulario enviado por {form.name.data} desde {form.school.data}")
+        return redirect(url_for('contacto'))
+    return render_template('contacto.html', form=form)
 
 @app.route('/submit_contact', methods=['POST'])
 def submit_contact():
