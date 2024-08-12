@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import OperationalError
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, IntegerField, TextAreaField, EmailField, SelectField
+from wtforms import StringField, SubmitField, DateTimeField, IntegerField, TextAreaField, EmailField, SelectField, BooleanField
 from wtforms.validators import DataRequired, Email, Length
 from datetime import datetime, timedelta
 from contacto import contacto_bp
@@ -101,7 +101,37 @@ class ContactForm(FlaskForm):
     message = TextAreaField('Mensaje', validators=[DataRequired()])
     submit = SubmitField('Enviar')
 
+class Division(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
 
+class Stage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+
+class Match(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sport = db.Column(db.String(50), nullable=False)
+    stage = db.Column(db.String(20), nullable=False)  # 16th, 8th, etc.
+    division = db.Column(db.String(20), nullable=False)  # minor, intermediate, major
+    team1 = db.Column(db.String(100), nullable=False)
+    team2 = db.Column(db.String(100), nullable=False)
+    score_team1 = db.Column(db.Integer, nullable=True)
+    score_team2 = db.Column(db.Integer, nullable=True)
+    date = db.Column(db.DateTime, nullable=False)
+    location = db.Column(db.String(100), nullable=False)
+    completed = db.Column(db.Boolean, default=False)
+    winner = db.Column(db.String(100), nullable=True)
+
+class MatchForm(FlaskForm):
+    sport = StringField('Sport', validators=[DataRequired()])
+    stage = SelectField('Stage', choices=[('16th', '16th'), ('8th', '8th'), ('Quarterfinal', 'Quarterfinal'), ('Semifinal', 'Semifinal'), ('Final', 'Final')], validators=[DataRequired()])
+    division = SelectField('Division', choices=[('minor', 'Minor'), ('intermediate', 'Intermediate'), ('major', 'Major')], validators=[DataRequired()])
+    team1 = StringField('Team 1', validators=[DataRequired()])
+    team2 = StringField('Team 2', validators=[DataRequired()])
+    date = DateTimeField('Match Date', validators=[DataRequired()])
+    location = StringField('Location', validators=[DataRequired()])
+    submit = SubmitField('Add Match')
 
 class Notification(db.Model):
     __tablename__ = 'Notifications'
@@ -305,6 +335,30 @@ def generate_order_number():
 @app.route('/ubicacion')
 def ubicacion():
     return render_template('ubicacion.html')
+
+@app.route('/add_match', methods=['GET', 'POST'])
+def add_match():
+    form = MatchForm()
+    if form.validate_on_submit():
+        new_match = Match(
+            sport=form.sport.data,
+            stage=form.stage.data,
+            division=form.division.data,
+            team1=form.team1.data,
+            team2=form.team2.data,
+            date=form.date.data,
+            location=form.location.data,
+        )
+        db.session.add(new_match)
+        db.session.commit()
+        flash('Match added successfully', 'success')
+        return redirect(url_for('index'))
+    return render_template('add_match.html', form=form)
+
+@app.route('/matches')
+def view_matches():
+    matches = Match.query.all()
+    return render_template('matches.html', matches=matches) 
 
 
 if __name__ == '__main__':

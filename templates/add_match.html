@@ -1,0 +1,33 @@
+<!-- add_match.html -->
+{% extends "base.html" %}
+{% block body %}
+    <h2>Agregar Partido</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.division.label }} {{ form.division }}
+        </div>
+        <div>
+            {{ form.stage.label }} {{ form.stage }}
+        </div>
+        <div>
+            {{ form.team_a.label }} {{ form.team_a }}
+        </div>
+        <div>
+            {{ form.team_b.label }} {{ form.team_b }}
+        </div>
+        <div>
+            {{ form.field.label }} {{ form.field }}
+        </div>
+        <div>
+            {{ form.time.label }} {{ form.time }}
+        </div>
+        <div>
+            {{ form.result_a.label }} {{ form.result_a }}
+        </div>
+        <div>
+            {{ form.result_b.label }} {{ form.result_b }}
+        </div>
+        <button type="submit">Guardar</button>
+    </form>
+{% endblock %}

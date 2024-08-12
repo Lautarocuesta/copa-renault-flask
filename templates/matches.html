@@ -1,0 +1,42 @@
+<!-- matches.html -->
+{% extends "base.html" %}
+{% block body %}
+    <h2>Partidos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>División</th>
+                <th>Etapa</th>
+                <th>Equipo A</th>
+                <th>Equipo B</th>
+                <th>Cancha</th>
+                <th>Horario</th>
+                <th>Resultado A</th>
+                <th>Resultado B</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for match in matches %}
+                <tr>
+                    <td>{{ match.division.name }}</td>
+                    <td>{{ match.stage.name }}</td>
+                    <td>{{ match.team_a }}</td>
+                    <td>{{ match.team_b }}</td>
+                    <td>{{ match.field }}</td>
+                    <td>{{ match.time }}</td>
+                    <td>{{ match.result_a }}</td>
+                    <td>{{ match.result_b }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% for match in matches %}
+    <div class="match-card {% if match.stage == 'Final' %}bg-warning{% elif match.stage == 'Semifinal' %}bg-danger{% elif match.stage == 'Quarterfinal' %}bg-info{% else %}bg-secondary{% endif %}">
+        <h4>{{ match.team1 }} vs {{ match.team2 }}</h4>
+        <p>Stage: {{ match.stage }} | Division: {{ match.division }}</p>
+        <p>Date: {{ match.date.strftime('%Y-%m-%d %H:%M') }}</p>
+        <p>Location: {{ match.location }}</p>
+    </div>
+{% endfor %}
+
+{% endblock %}
