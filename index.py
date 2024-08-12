@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate  # Importa Flask-Migrate
 from sqlalchemy.exc import OperationalError
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateTimeField, IntegerField, TextAreaField, EmailField, SelectField, BooleanField
@@ -24,7 +25,7 @@ app = Flask(__name__)
 app.secret_key = 'copa'
 
 # Database Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://uezytq7dxx48hp8w:s18HO1qr2Nw46fXbuHPg@bhyb1fa898t0ow9ufdlc-mysql.services.clever-cloud.com/bhyb1fa898t0ow9ufdlc'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://ujxh8tptugv44iuc:qoXCN3J0dH8sLBx9iSKU@bdmhskhmd2zuhryobzdq-mysql.services.clever-cloud.com:3306/bdmhskhmd2zuhryobzdq'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     'connect_args': {
@@ -34,6 +35,30 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
 
 # Initialize SQLAlchemy
 db = SQLAlchemy(app)
+
+# Initialize Flask-Migrate
+migrate = Migrate(app, db)  # Configura Flask-Migrate
+
+# Define SQLAlchemy Models (aquí van tus modelos)
+# ...
+
+# Create all necessary tables
+with app.app_context():
+    try:
+        db.create_all()
+        print("La base de datos se ha creado correctamente.")
+    except OperationalError as e:
+        print("Error al conectar con la base de datos:", e)
+    except Exception as e:
+        print("Error:", e)
+# Database Configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://ujxh8tptugv44iuc:qoXCN3J0dH8sLBx9iSKU@bdmhskhmd2zuhryobzdq-mysql.services.clever-cloud.com:3306/bdmhskhmd2zuhryobzdq'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'connect_args': {
+        'connect_timeout': 60  # Increase the timeout to 60 seconds
+    }
+}
 
 
 # Define SQLAlchemy Models
