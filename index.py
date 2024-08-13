@@ -111,27 +111,27 @@ class Stage(db.Model):
 
 class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    sport = db.Column(db.String(50), nullable=False)
-    stage = db.Column(db.String(20), nullable=False)  # 16th, 8th, etc.
-    division = db.Column(db.String(20), nullable=False)  # minor, intermediate, major
-    team1 = db.Column(db.String(100), nullable=False)
-    team2 = db.Column(db.String(100), nullable=False)
-    score_team1 = db.Column(db.Integer, nullable=True)
-    score_team2 = db.Column(db.Integer, nullable=True)
-    date = db.Column(db.DateTime, nullable=False)
-    location = db.Column(db.String(100), nullable=False)
-    completed = db.Column(db.Boolean, default=False)
-    winner = db.Column(db.String(100), nullable=True)
+    sport = db.Column(db.String(50))
+    division = db.Column(db.String(50))
+    stage = db.Column(db.String(50))
+    match = db.Column(db.String(50))
+    cancha = db.Column(db.String(50))
+    horario = db.Column(db.String(50))
+    contrincante = db.Column(db.String(100))
+    colegio = db.Column(db.String(100))
+    resultado = db.Column(db.String(50))
 
 class MatchForm(FlaskForm):
-    sport = StringField('Sport', validators=[DataRequired()])
-    stage = SelectField('Stage', choices=[('16th', '16th'), ('8th', '8th'), ('Quarterfinal', 'Quarterfinal'), ('Semifinal', 'Semifinal'), ('Final', 'Final')], validators=[DataRequired()])
-    division = SelectField('Division', choices=[('minor', 'Minor'), ('intermediate', 'Intermediate'), ('major', 'Major')], validators=[DataRequired()])
-    team1 = StringField('Team 1', validators=[DataRequired()])
-    team2 = StringField('Team 2', validators=[DataRequired()])
-    date = DateTimeField('Match Date', validators=[DataRequired()])
-    location = StringField('Location', validators=[DataRequired()])
-    submit = SubmitField('Add Match')
+    sport = SelectField('Sport', choices=[('Voleibol', 'Voleibol'), ('Fútbol', 'Fútbol'), ('Baloncesto', 'Baloncesto')])
+    division = SelectField('Division', choices=[('Menor', 'Menor'), ('Intermedia', 'Intermedia'), ('Mayor', 'Mayor')])
+    stage = SelectField('Stage', choices=[('16avos', '16avos'), ('8avos', '8avos'), ('Cuartos', 'Cuartos'), ('Semis', 'Semis'), ('Final', 'Final')])
+    match = StringField('Match')
+    cancha = StringField('Cancha')
+    horario = StringField('Horario')
+    contrincante = StringField('Contrincante')
+    colegio = StringField('Colegio')
+    resultado = StringField('Resultado')
+    submit = SubmitField('Submit')
 
 class Notification(db.Model):
     __tablename__ = 'Notifications'
@@ -336,24 +336,27 @@ def generate_order_number():
 def ubicacion():
     return render_template('ubicacion.html')
 
-@app.route('/add_match', methods=['GET', 'POST'])
+@app.route('/add-match', methods=['GET', 'POST'])
 def add_match():
     form = MatchForm()
     if form.validate_on_submit():
-        new_match = Match(
+        match = Match(
             sport=form.sport.data,
-            stage=form.stage.data,
             division=form.division.data,
-            team1=form.team1.data,
-            team2=form.team2.data,
-            date=form.date.data,
-            location=form.location.data,
+            stage=form.stage.data,
+            match=form.match.data,
+            cancha=form.cancha.data,
+            horario=form.horario.data,
+            contrincante=form.contrincante.data,
+            colegio=form.colegio.data,
+            resultado=form.resultado.data
         )
-        db.session.add(new_match)
+        db.session.add(match)
         db.session.commit()
-        flash('Match added successfully', 'success')
-        return redirect(url_for('index'))
+        flash('Match added successfully!', 'success')
+        return redirect(url_for('some_route'))
     return render_template('add_match.html', form=form)
+
 
 @app.route('/matches')
 def view_matches():
